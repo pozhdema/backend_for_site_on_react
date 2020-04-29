@@ -26,7 +26,7 @@ sudo apt-get -y install nginx
 echo "-= Nginx installed =-"
 
 # Nginx setup
-sudo cp /home/vagrant/project/provision/nginx.conf /etc/nginx/sites-available/site.conf
+sudo cp /home/vagrant/php_elementary_course/provision/nginx.conf /etc/nginx/sites-available/site.conf
 sudo chmod 644 /etc/nginx/sites-available/site.conf
 sudo ln -s /etc/nginx/sites-available/site.conf /etc/nginx/sites-enabled/site.conf
 sudo service nginx restart
@@ -36,8 +36,23 @@ echo "-= Nginx configurated =-"
 sudo rm -Rf /var/www/*
 echo "-= Folder /var/www cleaned =-"
 
-sudo ln -s /home/vagrant /var/www
+sudo ln -s /home/vagrant/* /var/www
 echo "-= Symlink for /var/www => /home/vagrant created =-"
+
+#mysql-server
+export DEBIAN_FRONTEND=noninteractive
+sudo -E apt-get -q -y install mysql-server
+sudo mysqladmin -u root password $dbPwd
+echo "user for MySQL created"
+
+sudo mysql -uroot -p$dbPwd -e "CREATE DATABASE $dbName DEFAULT CHARACTER SET utf8 ;"
+sudo mysql -uroot -p$dbPwd -e "CREATE USER $dbUser@localhost IDENTIFIED BY '$dbPwd';"
+sudo mysql -uroot -p$dbPwd -e "GRANT ALL PRIVILEGES ON $dbName.* TO '$dbUser'@'localhost';"
+sudo mysql -uroot -p$dbPwd -e "FLUSH PRIVILEGES;"
+echo "-= Table created =-"
+echo "-= Mysql-server installed =-"
+
+sudo mysql -u $dbUser -p$dbPwd $dbName < /home/vagrant/php_elementary_course/provision/dump.sql
 
 sudo apt-get -y --no-install-recommends install curl ca-certificates unzip \
         php7.2-cli php7.2-curl php-apcu php-apcu-bc \
@@ -53,20 +68,6 @@ sudo apt-get -y --no-install-recommends install curl ca-certificates unzip \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/* ~/.composer
 echo "-= PHP installed =-"
 
-#mysql-server
-export DEBIAN_FRONTEND=noninteractive
-sudo -E apt-get -q -y install mysql-server
-mysqladmin -u root password $dbPwd
-echo "user for MySQL created"
-
-mysql -uroot -p$dbPwd -e "CREATE DATABASE $dbName DEFAULT CHARACTER SET utf8 ;"
-mysql -uroot -p$dbPwd -e "CREATE USER $dbUser@localhost IDENTIFIED BY '$dbPwd';"
-mysql -uroot -p$dbPwd -e "GRANT ALL PRIVILEGES ON $dbName.* TO '$dbUser'@'localhost';"
-mysql -uroot -p$dbPwd -e "FLUSH PRIVILEGES;"
-echo "-= Table created =-"
-echo "-= Mysql-server installed =-"
-
-sudo mysql -u $dbUser -p$dbPwd $dbName < /home/vagrant/php_elementary_course/provision/dump.sql
 sudo apt-get autoremove -y
 sudo service nginx start
 echo "-= FINISHED =-"

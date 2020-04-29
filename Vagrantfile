@@ -31,5 +31,4 @@ Vagrant.configure(2) do |config|
     configuration["db"]["name"]
    ],
    privileged: true
-   config.vm.provision :shell, path: "provision/start-server.sh", run: "always", privileged: false
 end
