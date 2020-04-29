@@ -1,0 +1,11 @@
+name: php_elementary_course
+hostname: qwe.loc
+path: C:\fprtf\php_elementary_course
+virtualbox:
+  memory: 4096
+ip: 192.168.33.55
+timezone: Europe/Kiev
+db:
+  user: root
+  password: vagrant
+  name: php_course
