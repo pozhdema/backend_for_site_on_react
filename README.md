@@ -1,7 +1,7 @@
 ##For learn PHP independent of OS need Vagrant + VM.
 ## Dependencies
 - [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
-- [Vagrant](https://www.vagrantup.com/downloads.html)
+- [Vagrant](https://www.vagrantup.com/downloads.html) >= 2.2.6
 ## Local enviroment setup:
 Create config file ``config.yaml`` in root of project with next variables:
 ````
@@ -33,9 +33,9 @@ example:
 - OS :
 	- Ubuntu 18.04 LTS x64
 - DB :
-	- MySQL
+	- MySQL 5.7.xx
 - Server (proxy) :
-	- Nginx
+	- Nginx 1.14.x
 - Tool :
     - PHP 7.2
 
