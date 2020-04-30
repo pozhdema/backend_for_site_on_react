@@ -54,18 +54,17 @@ echo "-= Mysql-server installed =-"
 
 sudo mysql -u $dbUser -p$dbPwd $dbName < /home/vagrant/php_elementary_course/provision/dump.sql
 
-sudo apt-get -y --no-install-recommends install curl ca-certificates unzip \
-        php7.2-cli php7.2-curl php-apcu php-apcu-bc \
-        php7.2-json php7.2-mbstring php7.2-opcache php7.2-readline php7.2-xml php7.2-zip \
-        build-essential make \
-        php7.2-dev php-pear \
-        php7.2-mysql php-redis php-xdebug php7.2-bcmath php7.2-bz2 php7.2-gd php7.2-intl php-ssh2 php7.2-xsl php-yaml cron php-phpseclib php-seclib \
-        php-mbstring php7.2-curl \
-    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-    && composer global require hirak/prestissimo \
+sudo add-apt-repository ppa:ondrej/php
+sudo apt-get update
+sudo apt-get install -y php7.2
+sudo apt-get install -y php-pear php7.2-curl php7.2-dev php7.2-gd php7.2-mbstring php7.2-zip php7.2-mysql php7.2-xml 
+sudo apt-get install -y php7.2-readline php7.2-soap php7.2-xsl php7.2-zip php7.2-intl php7.2-fpm
+sudo apt-get install -y php-xdebug
+cd ~
+curl -sS https://getcomposer.org/installer -o composer-setup.php
+php composer-setup.php --install-dir=/usr/local/bin --filename=composer\
     && composer clear-cache \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/* ~/.composer
+    && apt-get clean
 echo "-= PHP installed =-"
 
 sudo apt-get autoremove -y
