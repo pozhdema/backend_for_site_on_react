@@ -22,7 +22,7 @@ Vagrant.configure(2) do |config|
     config.vm.network "forwarded_port", guest: 9229, host: 9229
     config.vm.network "forwarded_port", guest: 27017, host: 27017
 
-    config.vm.synced_folder configuration["path"], "/home/vagrant/"configuration["name"], :mount_options => [ "dmode=777", "fmode=777" ], :owner => 'www-data', :group => 'www-data'
+    config.vm.synced_folder configuration["path"], "/home/vagrant/" + configuration["name"], :mount_options => [ "dmode=777", "fmode=777" ], :owner => 'www-data', :group => 'www-data'
 
     config.vm.provision "shell", path: "provision/bootstrap.sh", :args => [
     configuration["timezone"],
