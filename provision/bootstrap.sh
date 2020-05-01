@@ -54,6 +54,37 @@ echo "-= Mysql-server installed =-"
 
 sudo mysql -u $dbUser -p$dbPwd $dbName < /home/vagrant/php_elementary_course/provision/dump.sql
 
+# Redis
+echo "-= Start installing REDIS =-"
+sudo mkdir /etc/redis
+sudo mkdir /var/redis
+sudo apt install -y redis-server
+sudo apt install -y redis-tools
+sudo cp /tmp/redis-conf/redis.conf /etc/redis/redis.conf
+sudo chmod -R 777 /var/redis
+sleep 1
+systemctl stop redis-server
+adduser --system --group --no-create-home redis
+mkdir /var/lib/redis
+chown redis:redis /var/lib/redis
+chmod 770 /var/lib/redis
+cp /tmp/redis-conf/redis.service /etc/systemd/system/redis.service
+# shellcheck disable=SC2024
+sudo echo -n > /etc/redis/redis.confe
+echo "maxmemory 52mb" >> /etc/redis/redis.confe
+echo "maxmemory-policy allkeys_lfu" >> /etc/redis/redis.confe
+sudo systemctl start redis-server
+sudo systemctl enable redis-server
+sleep 1
+if [[ "$( echo 'ping' | /usr/bin/redis-cli )" == "PONG" ]] ; then
+    echo "ping worked"
+else
+    echo "ping FAILED"
+fi
+sudo systemctl status redis
+sudo systemctl status redis-server
+echo "-= REDIS installed =-"
+
 sudo add-apt-repository ppa:ondrej/php
 sudo apt-get update
 sudo apt-get install -y php7.2
