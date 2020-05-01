@@ -4,6 +4,7 @@ timezone=$1
 dbUser=$2
 dbPwd=$3
 dbName=$4
+appPath=$5
 
 echo "-= Start build =-";
 # OS config
@@ -26,7 +27,7 @@ sudo apt-get -y install nginx
 echo "-= Nginx installed =-"
 
 # Nginx setup
-sudo cp /home/vagrant/php_elementary_course/provision/nginx.conf /etc/nginx/sites-available/site.conf
+sudo cp /home/vagrant/$appPath/provision/nginx.conf /etc/nginx/sites-available/site.conf
 sudo chmod 644 /etc/nginx/sites-available/site.conf
 sudo ln -s /etc/nginx/sites-available/site.conf /etc/nginx/sites-enabled/site.conf
 sudo service nginx restart
@@ -52,7 +53,7 @@ sudo mysql -uroot -p$dbPwd -e "FLUSH PRIVILEGES;"
 echo "-= Table created =-"
 echo "-= Mysql-server installed =-"
 
-sudo mysql -u $dbUser -p$dbPwd $dbName < /home/vagrant/php_elementary_course/provision/dump.sql
+sudo mysql -u $dbUser -p$dbPwd $dbName < /home/vagrant/$appPath/provision/dump.sql
 
 # Redis
 echo "-= Start installing REDIS =-"
@@ -69,7 +70,6 @@ mkdir /var/lib/redis
 chown redis:redis /var/lib/redis
 chmod 770 /var/lib/redis
 cp /tmp/redis-conf/redis.service /etc/systemd/system/redis.service
-# shellcheck disable=SC2024
 sudo echo -n > /etc/redis/redis.confe
 echo "maxmemory 52mb" >> /etc/redis/redis.confe
 echo "maxmemory-policy allkeys_lfu" >> /etc/redis/redis.confe

@@ -1,6 +1,6 @@
-name: php_elementary_course
+name: application
 hostname: qwe.loc
-path: C:\fprtf\php_elementary_course
+path:
 virtualbox:
   memory: 4096
 ip: 192.168.33.55
