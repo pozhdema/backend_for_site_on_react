@@ -6,13 +6,13 @@
 Create config file ``config.yaml`` in root of project with next variables:
 ````
 ---
-  name: (VM name)
-  hostname: (local hostname)
-  path: (path to project)
+  name: php_elementary_cours (VM name)
+  hostname: qwe.loc (local hostname)
+  path: (path to project in your PC)
   virtualbox:
-    memory: (max RAM volume for VM - default 2048)
-  ip: (local ip for vagrant listen)
-  timezone: (server timezone)
+    memory: 2048(max RAM volume for VM - default 2048)
+  ip: 192.168.33.55 (local ip for vagrant listen)
+  timezone: Europe/Kiev (server timezone)
   db:
     user: (db user login)
     password: (db useer password)
@@ -25,7 +25,7 @@ ip hostname
 ````
 example:
 ````
-127.0.0.1 me.dev
+192.168.33.55 qwe.loc
 #{local ip for vagrant listen } {local hostname} from config.yaml
 ````
 
