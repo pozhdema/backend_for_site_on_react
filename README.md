@@ -1,6 +1,6 @@
 ##For learn PHP independent of OS need Vagrant + VM.
 ## Dependencies
-- [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
+- [VirtualBox](https://www.virtualbox.org/wiki/Downloads) >= 6.1.6
 - [Vagrant](https://www.vagrantup.com/downloads.html) >= 2.2.6
 ## Local enviroment setup:
 Create config file ``config.yaml`` in root of project with next variables:
