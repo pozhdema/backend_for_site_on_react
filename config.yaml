@@ -1,6 +1,6 @@
 name: application
 hostname: qwe.loc
-path:
+path: D:\WORK\projects\backend_for_site_on_react
 virtualbox:
   memory: 4096
 ip: 192.168.33.55

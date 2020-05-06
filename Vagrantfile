@@ -14,7 +14,7 @@ Vagrant.configure(2) do |config|
     config.vm.network "private_network", ip: configuration["ip"]
     config.vm.provider "virtualbox" do |vb|
         vb.memory = configuration["virtualbox"]["memory"]
-        vb.name = configuration["name"]
+        vb.name = configuration["name"]+"dev"
     end
 
     config.vm.hostname = configuration["hostname"]
