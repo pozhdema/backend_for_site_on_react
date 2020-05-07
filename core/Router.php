@@ -11,7 +11,11 @@ class Router
 
     public function __construct()
     {
-        $queryString = strstr(substr($_SERVER["REQUEST_URI"], 1, -1), "?", true);
+        if (stripos($_SERVER["REQUEST_URI"], "?")){
+            $queryString = strstr(substr($_SERVER["REQUEST_URI"], 1), "?", true);
+        }else{
+            $queryString = substr($_SERVER["REQUEST_URI"], 1);
+        }
         $queryArray = explode('/', $queryString);
         if (count($queryArray) === 1 && count($queryArray)) {
             if (!empty($queryArray[0])) {
@@ -33,7 +37,7 @@ class Router
      */
     public function getController()
     {
-        return $this->controller;
+        return ucfirst($this->controller);
     }
 
     /**

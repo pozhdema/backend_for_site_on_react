@@ -4,6 +4,8 @@
 namespace Core;
 
 
+use App\Controllers\IndexController;
+
 class Application
 {
     public function __construct()
@@ -22,8 +24,15 @@ class Application
             }
         });
         $router = new Router();
-        echo $router->getAction();
-        echo $router->getController();
+        $controllerClassName = "App\\Controllers\\".$router->getController()."Controller";
+        $controller = new $controllerClassName();
+        $actionName = $router->getAction()."Action";
+
+        if (method_exists($controller,$actionName)){
+            $controller->$actionName();
+        }else{
+            throw new \Exception("Method '$actionName' is not defined");
+        }
     }
 
 }

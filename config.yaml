@@ -6,6 +6,6 @@ virtualbox:
 ip: 192.168.33.55
 timezone: Europe/Kiev
 db:
-  user: root
+  user: vagrant
   password: vagrant
   name: php_course
