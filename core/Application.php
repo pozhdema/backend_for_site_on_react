@@ -5,6 +5,7 @@ namespace Core;
 
 
 use App\Controllers\IndexController;
+use Core\Mvc\Controller;
 
 class Application
 {
@@ -17,22 +18,29 @@ class Application
             $className = explode("\\", strtolower($className));
             $className[count($className) - 1] = ucfirst($className[count($className) - 1]) . ".php";
             $className = BASE_PATH . implode("/", $className);
-            if (file_exists($className)){
-                require_once ($className);
-            }else{
+            if (file_exists($className)) {
+                require_once($className);
+            } else {
                 throw new \Exception("Class '$className' is not defined");
             }
         });
         $router = new Router();
-        $controllerClassName = "App\\Controllers\\".$router->getController()."Controller";
+        $controllerClassName = "App\\Controllers\\" . $router->getController() . "Controller";
         $controller = new $controllerClassName();
-        $actionName = $router->getAction()."Action";
+        $actionName = $router->getAction() . "Action";
 
-        if (method_exists($controller,$actionName)){
-            $controller->$actionName();
-        }else{
+        if (method_exists($controller, $actionName)) {
+            $this->execute($controller, $actionName);
+        } else {
             throw new \Exception("Method '$actionName' is not defined");
         }
     }
 
+    public function execute($controller, $actionName)
+    {
+        /** @var Controller $controller */
+        $controller->setRequest(new Request());
+        $controller->setResponse(new Response());
+        $controller->$actionName();
+    }
 }

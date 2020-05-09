@@ -4,11 +4,15 @@
 namespace App\Controllers;
 
 
-class IndexController
+use Core\Mvc\Controller;
+
+class IndexController extends Controller
 {
     public function indexAction()
     {
-        echo "</br>" . "IndexController[indexAction]";
+        $this->response->setStatus("success");
+        $this->response->setMessage("OK");
+        $this->response->setData($this->request->getGet());
+        return $this->response->json();
     }
-
 }
