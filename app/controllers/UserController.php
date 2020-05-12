@@ -4,11 +4,14 @@
 namespace App\Controllers;
 
 
-class UserController
+use Core\DB;
+use Core\Mvc\Controller;
+
+class UserController extends Controller
 {
     public function indexAction()
     {
-        echo "</br>" . "UserController[indexAction]";
+        DB::getInstance()->getConnection();
     }
 
     public function loginAction()

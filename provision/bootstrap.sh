@@ -89,7 +89,7 @@ sudo add-apt-repository ppa:ondrej/php
 sudo apt-get update
 sudo apt-get install -y php7.2
 sudo apt-get install -y php-pear php7.2-curl php7.2-dev php7.2-gd php7.2-mbstring php7.2-zip php7.2-mysql php7.2-xml 
-sudo apt-get install -y php7.2-readline php7.2-soap php7.2-xsl php7.2-zip php7.2-intl php7.2-fpm
+sudo apt-get install -y php7.2-readline php7.2-soap php7.2-xsl php7.2-zip php7.2-intl php7.2-fpm php-yaml cron php-redis
 sudo apt-get install -y php-xdebug
 cd ~
 curl -sS https://getcomposer.org/installer -o composer-setup.php
