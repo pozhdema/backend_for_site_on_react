@@ -14,7 +14,7 @@ class IndexController extends Controller
         $this->response->setMessage("OK");
         $this->response->setData(
             [
-                '/static/media/IMG_0624-min.f0498765.jpg',
+//                '/static/media/IMG_0624-min.f0498765.jpg',
                 '/static/media/IMG_2598-compressor.015af6db.jpg',
                 '/static/media/IMG_0437-compressor.578fa943.jpg',
                 '/static/media/20190303165950_IMG_2463-compressor.f4fb8ea0.jpg',
