@@ -10,6 +10,10 @@ use Core\Response;
 class Controller
 {
     /**
+     * @var array
+     */
+    public $config;
+    /**
      * @var Request
      */
 
@@ -31,5 +35,10 @@ class Controller
     public function setResponse(Response $response)
     {
         $this->response = $response;
+    }
+
+    public function setConfig(array $config)
+    {
+        $this->config = $config;
     }
 }
