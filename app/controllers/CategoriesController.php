@@ -64,6 +64,8 @@ class CategoriesController extends Controller
         $params = $this->request->getPost();
         if (isset($params["id"])) {
             DB::getInstance()->delete(
+                'DELETE FROM `photo_category` WHERE `id_category` = :id', $params);
+            DB::getInstance()->delete(
                 'DELETE FROM `categories` WHERE `id` = :id', $params);
             $this->response->setStatus("success");
             $this->response->setMessage("Delete");
