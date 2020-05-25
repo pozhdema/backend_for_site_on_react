@@ -36,6 +36,12 @@ CREATE TABLE `php_course`.`photo_category` (
     ON DELETE NO ACTION
     ON UPDATE CASCADE);
 
+DROP TABLE IF EXISTS roles;
+CREATE TABLE `php_course`.`roles` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`id`));
+
 DROP TABLE IF EXISTS users;
 CREATE TABLE `php_course`.`users` (
   `id` INT NOT NULL AUTO_INCREMENT,
@@ -53,12 +59,6 @@ CREATE TABLE `php_course`.`users` (
     REFERENCES `php_course`.`roles` (`id`)
     ON DELETE NO ACTION
     ON UPDATE CASCADE);
-
-DROP TABLE IF EXISTS roles;
-CREATE TABLE `php_course`.`roles` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(100) NOT NULL,
-  PRIMARY KEY (`id`));
 
 DROP TABLE IF EXISTS resources;
 CREATE TABLE `php_course`.`resources` (
@@ -86,4 +86,8 @@ CREATE TABLE `php_course`.`permissions` (
     ON DELETE NO ACTION
     ON UPDATE CASCADE);
 
-
+ALTER TABLE `php_course`.`photo`
+ADD COLUMN `title_ua` TEXT NOT NULL AFTER `created`,
+ADD COLUMN `title_en` TEXT NOT NULL AFTER `title_ua`,
+ADD COLUMN `description_ua` TEXT NOT NULL AFTER `title_en`,
+ADD COLUMN `description_en` TEXT NOT NULL AFTER `description_ua`;

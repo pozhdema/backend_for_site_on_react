@@ -6,6 +6,7 @@ namespace App\Controllers;
 
 use Core\DB;
 use Core\Mvc\Controller;
+use Imagick;
 
 class PhotoController extends Controller
 {
@@ -15,7 +16,7 @@ class PhotoController extends Controller
         $links = [];
         foreach ($dataSet as $data) {
             $links[] = [
-                "path" => $this->config["domain"] . $data["path"] . $data["name"],
+                "path" => $this->config["domain"] . $data["path"] ."min/". $data["name"],
                 "id" => $data["id"]
             ];
         }
@@ -32,9 +33,30 @@ class PhotoController extends Controller
         $uploadFile = $uploadDir . $newFile;
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile)) {
+            $minFile = new Imagick($uploadFile);
+            $imageprops = $minFile->getImageGeometry();
+            $width = $imageprops["width"];
+            $height = $imageprops["height"];
+            if ($height > $width) {
+                $newHeight = 240;
+                $newWidth = round(($width*$newHeight) / $height);
+
+            } else {
+                $newWidth = 320;
+                $newHeight = round(($height / $width) * $newWidth);
+            }
+            $minFile->resizeImage($newWidth,$newHeight, Imagick::FILTER_LANCZOS, 1);
+            $minFile->writeImage($uploadDir . "min/" . $newFile);
             $id = DB::getInstance()->insert(
-                "INSERT INTO `photo` ( path, name) VALUES (:path, :name)",
-                ["path" => "/img/", "name" => $newFile]);
+                "INSERT INTO `photo` ( path, name, title_ua, title_en, description_ua, description_en) VALUES (:path, :name, :title_ua, :title_en, :description_ua, :description_en)",
+                [
+                    "path" => "/img/",
+                    "name" => $newFile,
+                    "title_ua" => $this->request->getPost("title_ua"),
+                    "title_en" => $this->request->getPost("title_en"),
+                    "description_ua" => $this->request->getPost("description_ua"),
+                    "description_en" => $this->request->getPost("description_en")
+                ]);
             if (!$id) {
                 $this->response->setStatus();
                 $this->response->setStatusCode(422);
@@ -63,7 +85,7 @@ class PhotoController extends Controller
                     $this->response->setMessage("OK");
                     $this->response->setData([
                         "id" => $id,
-                        "path"=>$this->config["domain"] . "/img/" . $newFile
+                        "path" => $this->config["domain"] . "/img/" . $newFile
                     ]);
                 }
             }
@@ -72,6 +94,7 @@ class PhotoController extends Controller
             $this->response->setStatusCode(422);
             $this->response->setMessage("Error fail did't upload");
         }
+
         return $this->response->json();
     }
 
@@ -89,7 +112,8 @@ class PhotoController extends Controller
             $this->response->setStatusCode(422);
             $this->response->setMessage("Photo not found");
         } else {
-            if(unlink(BASE_PATH ."public".$photoData[0]["path"].$photoData[0]["name"])){
+            if (unlink(BASE_PATH . "public" . $photoData[0]["path"] . $photoData[0]["name"])
+                && unlink(BASE_PATH . "public" . $photoData[0]["path"] . "min/" . $photoData[0]["name"])) {
                 $db->delete('DELETE FROM `photo_category` WHERE `id_photo` = :id',
                     [
                         "id" => $this->request->getPost("id")
@@ -101,7 +125,7 @@ class PhotoController extends Controller
                 $this->response->setStatus("success");
                 $this->response->setStatusCode(200);
                 $this->response->setMessage("OK");
-            }else{
+            } else {
                 $this->response->setStatus();
                 $this->response->setStatusCode(422);
                 $this->response->setMessage("Photo not found");
@@ -110,24 +134,28 @@ class PhotoController extends Controller
         return $this->response->json();
     }
 
-    public function getPhotoAction ()
+    public function getPhotoAction()
     {
         $flags = DB::getInstance()->select(
-            "SELECT `is_visible` AS visible, `slider_home` AS slider FROM `photo` WHERE id=:id",
-            ["id"=>$this->request->getPost("id")]
+            "SELECT `is_visible` AS visible, `slider_home` AS slider, `title_en`, `title_ua`, `description_en`, `description_ua` FROM `photo` WHERE id=:id",
+            ["id" => $this->request->getPost("id")]
         );
         $categories = DB::getInstance()->select(
             "SELECT `id_category` FROM `photo_category` WHERE `id_photo` = :id",
-            ["id"=>$this->request->getPost("id")]
+            ["id" => $this->request->getPost("id")]
         );
         $this->response->setStatus("success");
         $this->response->setStatusCode(200);
         $this->response->setMessage("OK");
         $this->response->setData(
             [
-                "visible"=>$flags[0]["visible"],
-                "slider"=>$flags[0]["slider"],
-                "categories"=>array_column($categories, "id_category")
+                "visible" => $flags[0]["visible"],
+                "slider" => $flags[0]["slider"],
+                "title_ua" =>$flags[0]["title_ua"],
+                "title_en" =>$flags[0]["title_en"],
+                "description_en" =>$flags[0]["description_en"],
+                "description_ua" =>$flags[0]["description_ua"],
+                "categories" => array_column($categories, "id_category")
             ]
         );
         return $this->response->json();
@@ -136,16 +164,21 @@ class PhotoController extends Controller
     public function updateAction()
     {
         DB::getInstance()->update(
-            "UPDATE `photo` SET `is_visible` = :visible, `slider_home` = :slider WHERE id=:id",
+            "UPDATE `photo` SET `is_visible` = :visible, `slider_home` = :slider, `title_ua` = :title_ua, `title_en` = :title_en,
+                   `description_ua`= :description_ua, `description_en`=:description_en  WHERE id=:id",
             [
-                "visible"=>$this->request->getPost("visible"),
-                "slider"=>$this->request->getPost("slider"),
-                "id"=>$this->request->getPost("id")
+                "visible" => $this->request->getPost("visible"),
+                "slider" => $this->request->getPost("slider"),
+                "title_ua" => $this->request->getPost("title_ua"),
+                "title_en" => $this->request->getPost("title_en"),
+                "description_ua" => $this->request->getPost("description_ua"),
+                "description_en" => $this->request->getPost("description_en"),
+                "id" => $this->request->getPost("id")
             ]
         );
         DB::getInstance()->delete(
             "DELETE FROM `photo_category` WHERE `id_photo`= :id",
-            ["id"=>$this->request->getPost("id")]
+            ["id" => $this->request->getPost("id")]
         );
         $params = ["id_photo" => $this->request->getPost("id")];
         $query = "INSERT INTO `photo_category` ( id_photo, id_category) VALUES ";
