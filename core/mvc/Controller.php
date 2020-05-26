@@ -12,6 +12,10 @@ class Controller
     /**
      * @var array
      */
+    public $cookies;
+    /**
+     * @var array
+     */
     public $config;
     /**
      * @var Request
@@ -40,5 +44,10 @@ class Controller
     public function setConfig(array $config)
     {
         $this->config = $config;
+    }
+
+    public  function setCookies()
+    {
+        $this->cookies = $_COOKIE;
     }
 }

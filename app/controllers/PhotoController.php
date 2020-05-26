@@ -12,6 +12,8 @@ class PhotoController extends Controller
 {
     public function listAction()
     {
+        print_r($this->cookies);
+        exit();
         $dataSet = DB::getInstance()->select("SELECT `path`, `name`, `id` FROM `photo`");
         $links = [];
         foreach ($dataSet as $data) {
