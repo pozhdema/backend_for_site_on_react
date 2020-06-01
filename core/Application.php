@@ -42,7 +42,6 @@ class Application
         $controller->setRequest(new Request());
         $controller->setResponse(new Response());
         $controller->setConfig(yaml_parse_file(BASE_PATH."config.yaml"));
-        $controller->setCookies();
         $controller->$actionName();
     }
 }

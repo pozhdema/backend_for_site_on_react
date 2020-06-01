@@ -1,6 +1,6 @@
 name: application
 hostname: qwe.loc
-domain: http://localhost
+domain: http://qwe.loc
 path: D:\WORK\projects\backend_for_site_on_react
 virtualbox:
   memory: 4096
