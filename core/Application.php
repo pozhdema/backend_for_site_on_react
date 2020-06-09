@@ -41,6 +41,7 @@ class Application
         /** @var Controller $controller */
         $controller->setRequest(new Request());
         $controller->setResponse(new Response());
+        $controller->setSession(new Session());
         $controller->setConfig(yaml_parse_file(BASE_PATH."config.yaml"));
         $controller->$actionName();
     }

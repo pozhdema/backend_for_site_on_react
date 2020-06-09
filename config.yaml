@@ -10,3 +10,4 @@ db:
   user: vagrant
   password: vagrant
   name: php_course
+salt: mercury

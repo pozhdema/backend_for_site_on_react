@@ -91,3 +91,16 @@ ADD COLUMN `title_ua` TEXT NOT NULL AFTER `created`,
 ADD COLUMN `title_en` TEXT NOT NULL AFTER `title_ua`,
 ADD COLUMN `description_ua` TEXT NOT NULL AFTER `title_en`,
 ADD COLUMN `description_en` TEXT NOT NULL AFTER `description_ua`;
+
+INSERT INTO `php_course`.`roles` (`id`, `name`) VALUES (1,'public');
+INSERT INTO `php_course`.`roles` (`id`, `name`) VALUES (2,'admin');
+INSERT INTO `php_course`.`roles` (`id`, `name`) VALUES (3,'user');
+
+ALTER TABLE `php_course`.`users`
+ADD UNIQUE INDEX `email_UNIQUE` (`email` ASC);
+
+INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('index', 'index');
+INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('categories', 'add');
+
+INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('1', '1');
+INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('2', '2');

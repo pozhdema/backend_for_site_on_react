@@ -6,6 +6,7 @@ namespace Core\Mvc;
 
 use Core\Request;
 use Core\Response;
+use Core\Session;
 
 class Controller
 {
@@ -24,8 +25,14 @@ class Controller
     public $response;
 
     /**
+     * @var Session
+     */
+    public $session;
+
+    /**
      * @param Request $request
      */
+
 
     public function setRequest(Request $request)
     {
@@ -40,5 +47,10 @@ class Controller
     public function setConfig(array $config)
     {
         $this->config = $config;
+    }
+
+    public function setSession(Session $session)
+    {
+        $this->session = $session;
     }
 }
