@@ -54,7 +54,7 @@ class UserController extends Controller
                   WHERE role_id IN (:id, :role_id)',
         [
             "id"=>static::PUBLIC,
-            "role_id"=>$this->session->getSession("user_id")
+            "role_id"=>$this->session->getSession("role_id")
         ]);
         if (!$data) {
             $this->response->setStatus();
@@ -64,6 +64,7 @@ class UserController extends Controller
             $this->session->createSession();
             $this->response->setStatus("success");
             $this->response->setMessage("OK");
+            $this->response->setData($data);
         }
         return $this->response->json();
     }

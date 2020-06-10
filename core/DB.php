@@ -69,6 +69,4 @@ class DB
         $this->statement->execute($param);
         return $this->statement->fetch(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
-
-
 }

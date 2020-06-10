@@ -30,19 +30,26 @@ class Application
         $actionName = $router->getAction() . "Action";
 
         if (method_exists($controller, $actionName)) {
-            $this->execute($controller, $actionName);
+            $this->execute($controller, $actionName, $router);
         } else {
             throw new \Exception("Method '$actionName' is not defined");
         }
     }
 
-    public function execute($controller, $actionName)
+    public function execute($controller, $actionName, $router)
     {
-        /** @var Controller $controller */
-        $controller->setRequest(new Request());
-        $controller->setResponse(new Response());
-        $controller->setSession(new Session());
-        $controller->setConfig(yaml_parse_file(BASE_PATH."config.yaml"));
-        $controller->$actionName();
+        $session = new Session();
+        ACL::getInstance()->setRoleID($session->getSession("role_id"));
+        if (ACL::getInstance()->isAllowed($router->getController(), $router->getAction())){
+            /** @var Controller $controller */
+            $controller->setRequest(new Request());
+            $controller->setResponse(new Response());
+            $controller->setSession($session);
+            $controller->setConfig(yaml_parse_file(BASE_PATH . "config.yaml"));
+            $controller->$actionName();
+        }else{
+            http_response_code(401);
+            exit("Access denied");
+        }
     }
 }

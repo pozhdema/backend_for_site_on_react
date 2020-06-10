@@ -104,3 +104,34 @@ INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('categor
 
 INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('1', '1');
 INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('2', '2');
+
+INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('categories', 'list');
+INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('categories', 'update');
+INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('categories', 'delete');
+INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('contact', 'index');
+INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('photo', 'list');
+INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('photo', 'photo');
+INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('photo', 'add');
+INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('photo', 'delete');
+INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('photo', 'getPhoto');
+INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('photo', 'update');
+INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('user', 'login');
+INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('user', 'logout');
+INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('user', 'get');
+INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('user', 'create');
+
+INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('1', '3');
+INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('2', '4');
+INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('2', '5');
+INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('1', '6');
+INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('2', '7');
+INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('1', '8');
+INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('2', '9');
+INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('2', '10');
+INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('2', '11');
+INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('2', '12');
+INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('1', '13');
+INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('1', '14');
+INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('1', '15');
+INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('1', '16');
+
