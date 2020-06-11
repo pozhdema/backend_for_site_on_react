@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS categories;
-CREATE TABLE `php_course`.`categories` (
+CREATE TABLE `categories` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `title_ua` VARCHAR(45) NOT NULL,
   `title_en` VARCHAR(45) NOT NULL,
@@ -8,7 +8,7 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 DROP TABLE IF EXISTS photo;
-CREATE TABLE `php_course`.`photo` (
+CREATE TABLE `photo` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `path` VARCHAR(200) NOT NULL,
   `name` VARCHAR(200) NOT NULL,
@@ -18,7 +18,7 @@ CREATE TABLE `php_course`.`photo` (
   PRIMARY KEY (`id`));
 
 DROP TABLE IF EXISTS photo_category;
-CREATE TABLE `php_course`.`photo_category` (
+CREATE TABLE `photo_category` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `id_photo` INT NOT NULL,
   `id_category` INT NOT NULL,
@@ -27,23 +27,23 @@ CREATE TABLE `php_course`.`photo_category` (
   INDEX `FK_category_idx` (`id_category` ASC),
   CONSTRAINT `FK_photo`
     FOREIGN KEY (`id_photo`)
-    REFERENCES `php_course`.`photo` (`id`)
+    REFERENCES `photo` (`id`)
     ON DELETE NO ACTION
     ON UPDATE CASCADE,
   CONSTRAINT `FK_category`
     FOREIGN KEY (`id_category`)
-    REFERENCES `php_course`.`categories` (`id`)
+    REFERENCES `categories` (`id`)
     ON DELETE NO ACTION
     ON UPDATE CASCADE);
 
 DROP TABLE IF EXISTS roles;
-CREATE TABLE `php_course`.`roles` (
+CREATE TABLE `roles` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`id`));
 
 DROP TABLE IF EXISTS users;
-CREATE TABLE `php_course`.`users` (
+CREATE TABLE `users` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `email` VARCHAR(200) NOT NULL,
   `username` VARCHAR(200) NOT NULL,
@@ -56,19 +56,19 @@ CREATE TABLE `php_course`.`users` (
   INDEX `FK_role_1_idx` (`role_id` ASC),
   CONSTRAINT `FK_role_1`
     FOREIGN KEY (`role_id`)
-    REFERENCES `php_course`.`roles` (`id`)
+    REFERENCES `roles` (`id`)
     ON DELETE NO ACTION
     ON UPDATE CASCADE);
 
 DROP TABLE IF EXISTS resources;
-CREATE TABLE `php_course`.`resources` (
+CREATE TABLE `resources` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `resource` VARCHAR(100) NOT NULL,
   `permission` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`id`));
 
 DROP TABLE IF EXISTS permissions;
-CREATE TABLE `php_course`.`permissions` (
+CREATE TABLE `permissions` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `role_id` INT NOT NULL,
   `resource_id` INT NOT NULL,
@@ -77,61 +77,61 @@ CREATE TABLE `php_course`.`permissions` (
   INDEX `FK_resource_idx` (`resource_id` ASC),
   CONSTRAINT `FK_role`
     FOREIGN KEY (`role_id`)
-    REFERENCES `php_course`.`roles` (`id`)
+    REFERENCES `roles` (`id`)
     ON DELETE NO ACTION
     ON UPDATE CASCADE,
   CONSTRAINT `FK_resource`
     FOREIGN KEY (`resource_id`)
-    REFERENCES `php_course`.`resources` (`id`)
+    REFERENCES `resources` (`id`)
     ON DELETE NO ACTION
     ON UPDATE CASCADE);
 
-ALTER TABLE `php_course`.`photo`
+ALTER TABLE `photo`
 ADD COLUMN `title_ua` TEXT NOT NULL AFTER `created`,
 ADD COLUMN `title_en` TEXT NOT NULL AFTER `title_ua`,
 ADD COLUMN `description_ua` TEXT NOT NULL AFTER `title_en`,
 ADD COLUMN `description_en` TEXT NOT NULL AFTER `description_ua`;
 
-INSERT INTO `php_course`.`roles` (`id`, `name`) VALUES (1,'public');
-INSERT INTO `php_course`.`roles` (`id`, `name`) VALUES (2,'admin');
-INSERT INTO `php_course`.`roles` (`id`, `name`) VALUES (3,'user');
+INSERT INTO `roles` (`id`, `name`) VALUES (1,'public');
+INSERT INTO `roles` (`id`, `name`) VALUES (2,'admin');
+INSERT INTO `roles` (`id`, `name`) VALUES (3,'user');
 
-ALTER TABLE `php_course`.`users`
+ALTER TABLE `users`
 ADD UNIQUE INDEX `email_UNIQUE` (`email` ASC);
 
-INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('index', 'index');
-INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('categories', 'add');
+INSERT INTO `resources` (`resource`, `permission`) VALUES ('index', 'index');
+INSERT INTO `resources` (`resource`, `permission`) VALUES ('categories', 'add');
 
-INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('1', '1');
-INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('2', '2');
+INSERT INTO `permissions` (`role_id`, `resource_id`) VALUES ('1', '1');
+INSERT INTO `permissions` (`role_id`, `resource_id`) VALUES ('2', '2');
 
-INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('categories', 'list');
-INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('categories', 'update');
-INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('categories', 'delete');
-INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('contact', 'index');
-INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('photo', 'list');
-INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('photo', 'photo');
-INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('photo', 'add');
-INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('photo', 'delete');
-INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('photo', 'getPhoto');
-INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('photo', 'update');
-INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('user', 'login');
-INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('user', 'logout');
-INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('user', 'get');
-INSERT INTO `php_course`.`resources` (`resource`, `permission`) VALUES ('user', 'create');
+INSERT INTO `resources` (`resource`, `permission`) VALUES ('categories', 'list');
+INSERT INTO `resources` (`resource`, `permission`) VALUES ('categories', 'update');
+INSERT INTO `resources` (`resource`, `permission`) VALUES ('categories', 'delete');
+INSERT INTO `resources` (`resource`, `permission`) VALUES ('contact', 'index');
+INSERT INTO `resources` (`resource`, `permission`) VALUES ('photo', 'list');
+INSERT INTO `resources` (`resource`, `permission`) VALUES ('photo', 'photo');
+INSERT INTO `resources` (`resource`, `permission`) VALUES ('photo', 'add');
+INSERT INTO `resources` (`resource`, `permission`) VALUES ('photo', 'delete');
+INSERT INTO `resources` (`resource`, `permission`) VALUES ('photo', 'getPhoto');
+INSERT INTO `resources` (`resource`, `permission`) VALUES ('photo', 'update');
+INSERT INTO `resources` (`resource`, `permission`) VALUES ('user', 'login');
+INSERT INTO `resources` (`resource`, `permission`) VALUES ('user', 'logout');
+INSERT INTO `resources` (`resource`, `permission`) VALUES ('user', 'get');
+INSERT INTO `resources` (`resource`, `permission`) VALUES ('user', 'create');
 
-INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('1', '3');
-INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('2', '4');
-INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('2', '5');
-INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('1', '6');
-INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('2', '7');
-INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('1', '8');
-INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('2', '9');
-INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('2', '10');
-INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('2', '11');
-INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('2', '12');
-INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('1', '13');
-INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('1', '14');
-INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('1', '15');
-INSERT INTO `php_course`.`permissions` (`role_id`, `resource_id`) VALUES ('1', '16');
+INSERT INTO `permissions` (`role_id`, `resource_id`) VALUES ('1', '3');
+INSERT INTO `permissions` (`role_id`, `resource_id`) VALUES ('2', '4');
+INSERT INTO `permissions` (`role_id`, `resource_id`) VALUES ('2', '5');
+INSERT INTO `permissions` (`role_id`, `resource_id`) VALUES ('1', '6');
+INSERT INTO `permissions` (`role_id`, `resource_id`) VALUES ('2', '7');
+INSERT INTO `permissions` (`role_id`, `resource_id`) VALUES ('1', '8');
+INSERT INTO `permissions` (`role_id`, `resource_id`) VALUES ('2', '9');
+INSERT INTO `permissions` (`role_id`, `resource_id`) VALUES ('2', '10');
+INSERT INTO `permissions` (`role_id`, `resource_id`) VALUES ('2', '11');
+INSERT INTO `permissions` (`role_id`, `resource_id`) VALUES ('2', '12');
+INSERT INTO `permissions` (`role_id`, `resource_id`) VALUES ('1', '13');
+INSERT INTO `permissions` (`role_id`, `resource_id`) VALUES ('1', '14');
+INSERT INTO `permissions` (`role_id`, `resource_id`) VALUES ('1', '15');
+INSERT INTO `permissions` (`role_id`, `resource_id`) VALUES ('1', '16');
 
