@@ -4,6 +4,7 @@
 namespace App\Controllers;
 
 
+use Core\ACL;
 use Core\DB;
 use Core\Mvc\Controller;
 
@@ -12,6 +13,11 @@ class UserController extends Controller
     const PUBLIC = 1;
     const ADMIN = 2;
     const USER = 3;
+    const ROLES = [
+        self::PUBLIC=>"public",
+        self::ADMIN=>"admin",
+        self::USER=>"user"
+    ];
 
     public function loginAction()
     {
@@ -56,6 +62,11 @@ class UserController extends Controller
             "id"=>static::PUBLIC,
             "role_id"=>$this->session->getSession("role_id")
         ]);
+        if ($this->session->getSession("role_id")!= false){
+            $role = self::ROLES[$this->session->getSession("role_id")];
+        }else{
+            $role = self::ROLES[self::PUBLIC];
+        }
         if (!$data) {
             $this->response->setStatus();
             $this->response->setStatusCode(422);
@@ -64,7 +75,10 @@ class UserController extends Controller
             $this->session->createSession();
             $this->response->setStatus("success");
             $this->response->setMessage("OK");
-            $this->response->setData($data);
+            $this->response->setData([
+                "role"=>$role,
+                "routes"=>$data
+            ]);
         }
         return $this->response->json();
     }
