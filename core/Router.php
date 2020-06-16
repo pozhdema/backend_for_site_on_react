@@ -18,15 +18,15 @@ class Router
         }
         $queryArray = explode('/', $queryString);
         if (count($queryArray) === 1 && count($queryArray)) {
-            if (!empty($queryArray[0])) {
-                $this->controller = $queryArray[0];
+            if (!empty($queryArray[1])) {
+                $this->controller = $queryArray[1];
             }
         } else {
-            if (!empty($queryArray[0])) {
-                $this->controller = $queryArray[0];
-            }
             if (!empty($queryArray[1])) {
-                $this->action = $queryArray[1];
+                $this->controller = $queryArray[1];
+            }
+            if (!empty($queryArray[2])) {
+                $this->action = $queryArray[2];
             }
         }
 

@@ -99,5 +99,21 @@ php composer-setup.php --install-dir=/usr/local/bin --filename=composer\
 echo "-= PHP installed =-"
 
 sudo apt-get autoremove -y
+curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+sudo apt-get -y install nodejs
+sudo apt-get install gcc g++ make
+node --version
+npm --version
+
+sudo apt install -y nodejs
+sudo apt install -y npm
+
+sudo npm install -g create-react-app
+sudo npm install -g react react-dom react-scripts
+
+sudo npm install --prefix /var/www/application/public/portfolio_react
+sudo npm audit fix
+
+systemctl stop apache2
 sudo service nginx start
 echo "-= FINISHED =-"

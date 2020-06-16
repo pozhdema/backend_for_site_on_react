@@ -32,4 +32,5 @@ Vagrant.configure(2) do |config|
     configuration["name"]
    ],
    privileged: true
+   config.vm.provision :shell, path: "provision/npmstart.sh", run: "always", privileged: true
 end
