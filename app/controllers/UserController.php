@@ -85,30 +85,48 @@ class UserController extends Controller
 
     public function createAction()
     {
-        $password = $this->request->getPost("password");
-        if (preg_match('/^(?=.*[a-z])(?=.*[A-Z])((?=.*[0-9])|(?=.*[!@#$%\^&\*]))(?=.{8,20})/', $password)) {
-            $passwordUser = password_hash($password . $this->config["salt"], PASSWORD_BCRYPT);
-            $id = DB::getInstance()->insert(
-                "INSERT INTO `users` (role_id, user_agent, ip ,email, password, username) VALUES (:role_id, :user_agent, :ip, :email, :password, :username)",
-                [
-                    "role_id" => static::ADMIN,
-                    "user_agent" => $_SERVER['HTTP_USER_AGENT'],
-                    "ip" => isset($_SERVER["HTTP_CF_CONNECTING_IP"]) ? $_SERVER["HTTP_CF_CONNECTING_IP"] : $_SERVER['REMOTE_ADDR'],
-                    "email" => $this->request->getPost("email"),
-                    "password" => $passwordUser,
-                    "username" => $this->request->getPost("username")
-                ]);
-            if (!$id) {
-                $this->response->setStatus();
-                $this->response->setStatusCode(422);
-                $this->response->setMessage("User don't inserted");
-            } else {
-                $this->session->createSession();
-                $this->session->setSession("role_id", static::ADMIN);
-                $this->session->setSession("user_id", $id);
-                $this->response->setStatus("success");
-                $this->response->setMessage("OK");
-            }
+        $email = $this->request->getPost("email");
+        if ($email){
+           $user =  DB::getInstance()->select("SELECT * FROM `users` WHERE email=:email",
+            [
+                "email"=>$this->request->getPost("email")
+            ]);
+           if (count($user)!=0){
+               $this->response->setStatus();
+               $this->response->setStatusCode(422);
+               $this->response->setMessage("User ready exist");
+           }
+           else {
+               $password = $this->request->getPost("password");
+               if (preg_match('/^(?=.*[a-z])(?=.*[A-Z])((?=.*[0-9])|(?=.*[!@#$%\^&\*]))(?=.{8,20})/', $password)) {
+                   $passwordUser = password_hash($password . $this->config["salt"], PASSWORD_BCRYPT);
+                   $id = DB::getInstance()->insert(
+                       "INSERT INTO `users` (role_id, user_agent, ip ,email, password, username) VALUES (:role_id, :user_agent, :ip, :email, :password, :username)",
+                       [
+                           "role_id" => static::USER,
+                           "user_agent" => $_SERVER['HTTP_USER_AGENT'],
+                           "ip" => isset($_SERVER["HTTP_CF_CONNECTING_IP"]) ? $_SERVER["HTTP_CF_CONNECTING_IP"] : $_SERVER['REMOTE_ADDR'],
+                           "email" => $this->request->getPost("email"),
+                           "password" => $passwordUser,
+                           "username" => $this->request->getPost("username")
+                       ]);
+                   if (!$id) {
+                       $this->response->setStatus();
+                       $this->response->setStatusCode(422);
+                       $this->response->setMessage("User don't inserted");
+                   } else {
+                       $this->session->createSession();
+                       $this->session->setSession("role_id", static::USER);
+                       $this->session->setSession("user_id", $id);
+                       $this->response->setStatus("success");
+                       $this->response->setMessage("OK");
+                   }
+               }
+           }
+        } else {
+            $this->response->setStatus();
+            $this->response->setStatusCode(422);
+            $this->response->setMessage("Email is required");
         }
         return $this->response->json();
     }
