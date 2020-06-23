@@ -22,23 +22,29 @@ class UserController extends Controller
     public function loginAction()
     {
         $email = $this->request->getPost("email");
-        $password = $this->request->getPost("password");
-        $user = DB::getInstance()->select('SELECT *  FROM `users` WHERE email=:email',
-            [
-                "email" => $this->request->getPost("email")
-            ]);
-        if (isset($user)) {
-            if (password_verify($password . $this->config["salt"], $user[0]["password"])) {
-                $this->session->createSession();
-                $this->session->setSession("user_id", $user[0]["id"]);
-                $this->session->setSession("role_id",$user[0]["role_id"]);
-                $this->response->setStatus("success");
-                $this->response->setMessage("The password is correct!");
-            } else {
-                $this->response->setStatus();
-                $this->response->setStatusCode(422);
-                $this->response->setMessage("The password is incorrect.");
+        if (!empty($email)){
+            $password = $this->request->getPost("password");
+            $user = DB::getInstance()->select('SELECT *  FROM `users` WHERE email=:email',
+                [
+                    "email" => $this->request->getPost("email")
+                ]);
+            if (isset($user[0])) {
+                if (password_verify($password . $this->config["salt"], $user[0]["password"])) {
+                    $this->session->createSession();
+                    $this->session->setSession("user_id", $user[0]["id"]);
+                    $this->session->setSession("role_id",$user[0]["role_id"]);
+                    $this->response->setStatus("success");
+                    $this->response->setMessage("The password is correct!");
+                } else {
+                    $this->response->setStatus();
+                    $this->response->setStatusCode(422);
+                    $this->response->setMessage("The password is incorrect.");
+                }
             }
+        }else {
+            $this->response->setStatus();
+            $this->response->setStatusCode(422);
+            $this->response->setMessage("Email ia required.");
         }
         return $this->response->json();
     }

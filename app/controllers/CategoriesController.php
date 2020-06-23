@@ -17,6 +17,14 @@ class CategoriesController extends Controller
         return $this->response->json();
     }
 
+    public function fullListAction()
+    {
+        $categories = DB::getInstance()->select("SELECT id,title_en, title_ua FROM categories");
+        $this->response->setStatus("success");
+        $this->response->setData($categories);
+        return $this->response->json();
+    }
+
     public function addAction()
     {
         $params = $this->request->getPost();

@@ -135,6 +135,8 @@ INSERT INTO `permissions` (`role_id`, `resource_id`) VALUES ('1', '14');
 INSERT INTO `permissions` (`role_id`, `resource_id`) VALUES ('1', '15');
 INSERT INTO `permissions` (`role_id`, `resource_id`) VALUES ('1', '16');
 
-INSERT INTO `php_course`.`categories` (`id`, `title_ua`, `title_en`) VALUES ('0', 'Всі', 'All');
+INSERT INTO `categories` (`id`, `title_ua`, `title_en`) VALUES ('0', 'Всі', 'All');
+INSERT INTO `resources` (`resource`, `permission`) VALUES ('categories', 'fullList');
+INSERT INTO `permissions` (`role_id`, `resource_id`) VALUES ('2', '17');
 
 
