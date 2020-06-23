@@ -11,7 +11,7 @@ class CategoriesController extends Controller
 {
     public function listAction()
     {
-        $categories = DB::getInstance()->select("SELECT `id`,`title_en`, `title_ua` FROM `categories`");
+        $categories = DB::getInstance()->select("SELECT id,title_{$this->lang} as title FROM categories");
         $this->response->setStatus("success");
         $this->response->setData($categories);
         return $this->response->json();

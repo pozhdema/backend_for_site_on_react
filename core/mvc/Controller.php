@@ -33,6 +33,10 @@ class Controller
      * @param Request $request
      */
 
+    /**
+     * @var string $lang
+     */
+    public $lang;
 
     public function setRequest(Request $request)
     {
@@ -52,5 +56,13 @@ class Controller
     public function setSession(Session $session)
     {
         $this->session = $session;
+    }
+
+    public function setLang(string $lang)
+    {
+        if ($lang=="uk"){
+            $lang="ua";
+        }
+        $this->lang = $lang;
     }
 }

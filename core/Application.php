@@ -52,6 +52,7 @@ class Application
             $controller->setResponse(new Response());
             $controller->setSession($session);
             $controller->setConfig(yaml_parse_file(BASE_PATH . "config.yaml"));
+            $controller->setLang(isset($_COOKIE["lang"])? $_COOKIE["lang"]: "uk");
             $controller->$actionName();
         } else {
             http_response_code(401);

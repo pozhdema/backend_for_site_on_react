@@ -31,14 +31,14 @@ class PhotoController extends Controller
         $params = $this->request->getGet();
         $data = [];
         $where = "";
-        $lang = "en";
+        $lang = $this->lang;
         if (!empty($params["category"])){
             $where = " LEFT JOIN photo_category pc on photo.id = pc.id_photo WHERE pc.id_category = :category";
             $data["category"]=$params["category"];
         }
         $dataSet = DB::getInstance()->select(
-            "SELECT `path`, `name`, photo.id, title_{$lang} as title, description_{$lang} as description
-                    FROM `photo` 
+            "SELECT path, name, photo.id, title_{$lang} as title, description_{$lang} as description
+                    FROM photo 
                     {$where}", $data
         );
         $links = [];
