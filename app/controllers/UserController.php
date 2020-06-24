@@ -52,9 +52,10 @@ class UserController extends Controller
     public function logoutAction()
     {
         $this->session->destroySession();
-        $this->response->setStatus();
-        $this->response->setStatusCode(401);
+        $this->response->setStatus("success");
+        $this->response->setStatusCode(200);
         $this->response->setMessage("The session is destroy.");
+        return $this->response->json();
     }
 
     public function getAction()
