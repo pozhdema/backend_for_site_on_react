@@ -31,15 +31,29 @@ class PhotoController extends Controller
         $params = $this->request->getGet();
         $data = [];
         $where = "";
+        $offset = "";
+        $limit = "";
         $lang = $this->lang;
         if (!empty($params["category"])){
             $where = " LEFT JOIN photo_category pc on photo.id = pc.id_photo WHERE pc.id_category = :category";
             $data["category"]=$params["category"];
         }
+        if (!empty($params["limit"])){
+            if (is_numeric($params["limit"])){
+                $int = intval($params["limit"]);
+                $limit=" LIMIT {$int} ";
+            }
+        }
+        if (!empty($params["offset"])){
+            if (is_numeric($params["offset"])){
+                $int = intval($params["offset"]);
+                $offset=" OFFSET {$int} ";
+            }
+        }
         $dataSet = DB::getInstance()->select(
-            "SELECT path, name, photo.id, title_{$lang} as title, description_{$lang} as description
+            "SELECT photo.id, path, name, title_{$lang} as title, description_{$lang} as description
                     FROM photo 
-                    {$where}", $data
+                    {$where} ORDER BY photo.id DESC {$limit} {$offset}", $data
         );
         $links = [];
         foreach ($dataSet as $data) {
@@ -48,7 +62,6 @@ class PhotoController extends Controller
                 "name" => $data["name"],
                 "id" => $data["id"],
                 "min" => $data["path"] . "min/",
-                "middle" => $data["path"] . "middle/",
                 "full" => $data["path"],
                 "title" => $data["title"],
                 "description" => $data["description"]
@@ -68,7 +81,6 @@ class PhotoController extends Controller
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile)) {
             $this->resize($uploadFile, $uploadDir, $newFile, 320, 240, "min/");
-            $this->resize($uploadFile, $uploadDir, $newFile, 640, 480, "middle/");
 
             $id = DB::getInstance()->insert(
                 "INSERT INTO `photo` ( path, name, title_ua, title_en, description_ua, description_en) VALUES (:path, :name, :title_ua, :title_en, :description_ua, :description_en)",
@@ -152,8 +164,7 @@ class PhotoController extends Controller
             $this->response->setMessage("Photo not found");
         } else {
             if (unlink(BASE_PATH . "public" . $photoData[0]["path"] . $photoData[0]["name"])
-                && unlink(BASE_PATH . "public" . $photoData[0]["path"] . "min/" . $photoData[0]["name"])
-                && unlink(BASE_PATH . "public" . $photoData[0]["path"] . "middle/" . $photoData[0]["name"])) {
+                && unlink(BASE_PATH . "public" . $photoData[0]["path"] . "min/" . $photoData[0]["name"])) {
                 $db->delete('DELETE FROM `photo_category` WHERE `id_photo` = :id',
                     [
                         "id" => $this->request->getPost("id")
