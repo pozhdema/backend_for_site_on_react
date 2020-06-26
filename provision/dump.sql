@@ -139,7 +139,7 @@ INSERT INTO `categories` (`id`, `title_ua`, `title_en`) VALUES ('0', 'Всі', '
 INSERT INTO `resources` (`resource`, `permission`) VALUES ('categories', 'fullList');
 INSERT INTO `permissions` (`role_id`, `resource_id`) VALUES ('2', '17');
 
-ALTER TABLE `php_course`.`photo`
+ALTER TABLE `photo`
 CHANGE COLUMN `description_ua` `description_ua` TEXT NULL ,
 CHANGE COLUMN `description_en` `description_en` TEXT NULL ;
 
