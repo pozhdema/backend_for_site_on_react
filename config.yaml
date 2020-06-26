@@ -11,3 +11,6 @@ db:
   password: vagrant
   name: php_course
 salt: mercury
+bot:
+  token: 1
+  channel: 1
