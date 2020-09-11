@@ -143,4 +143,7 @@ ALTER TABLE `photo`
 CHANGE COLUMN `description_ua` `description_ua` TEXT NULL ,
 CHANGE COLUMN `description_en` `description_en` TEXT NULL ;
 
+ALTER TABLE `photo`
+ADD COLUMN `vertical` TINYINT NULL AFTER `description_en`;
+
 

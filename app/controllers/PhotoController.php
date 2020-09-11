@@ -51,7 +51,7 @@ class PhotoController extends Controller
             }
         }
         $dataSet = DB::getInstance()->select(
-            "SELECT photo.id, path, name, title_{$lang} as title, description_{$lang} as description
+            "SELECT photo.id, path, name, title_{$lang} as title, description_{$lang} as description, vertical
                     FROM photo 
                     {$where} ORDER BY photo.id DESC {$limit} {$offset}", $data
         );
@@ -64,7 +64,8 @@ class PhotoController extends Controller
                 "min" => $data["path"] . "min/",
                 "full" => $data["path"],
                 "title" => $data["title"],
-                "description" => $data["description"]
+                "description" => $data["description"],
+                "vertical" => $data["vertical"]
             ];
         }
         $this->response->setStatus("success");
@@ -80,17 +81,18 @@ class PhotoController extends Controller
         $uploadFile = $uploadDir . $newFile;
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile)) {
-            $this->resize($uploadFile, $uploadDir, $newFile, 320, 240, "min/");
+            $vertical = $this->resize($uploadFile, $uploadDir, $newFile, 320, 240, "min/");
 
             $id = DB::getInstance()->insert(
-                "INSERT INTO `photo` ( path, name, title_ua, title_en, description_ua, description_en) VALUES (:path, :name, :title_ua, :title_en, :description_ua, :description_en)",
+                "INSERT INTO `photo` ( path, name, title_ua, title_en, description_ua, description_en, vertical) VALUES (:path, :name, :title_ua, :title_en, :description_ua, :description_en, :vertical)",
                 [
                     "path" => "/img/",
                     "name" => $newFile,
                     "title_ua" => $this->request->getPost("title_ua"),
                     "title_en" => $this->request->getPost("title_en"),
                     "description_ua" => $this->request->getPost("description_ua"),
-                    "description_en" => $this->request->getPost("description_en")
+                    "description_en" => $this->request->getPost("description_en"),
+                    "vertical" => $vertical
                 ]);
             if (!$id) {
                 $this->response->setStatus();
@@ -139,14 +141,16 @@ class PhotoController extends Controller
         $imageprops = $minFile->getImageGeometry();
         $width = $imageprops["width"];
         $height = $imageprops["height"];
+        $vertical = false;
         if ($height > $width) {
             $newWidth = round(($width * $newHeight) / $height);
-
+            $vertical = true;
         } else {
             $newHeight = round(($height / $width) * $newWidth);
         }
         $minFile->resizeImage($newWidth, $newHeight, Imagick::FILTER_LANCZOS, 1);
         $minFile->writeImage($uploadDir . $path . $newFile);
+        return $vertical;
     }
 
     public function deleteAction()
