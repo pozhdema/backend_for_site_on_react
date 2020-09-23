@@ -82,7 +82,6 @@ class PhotoController extends Controller
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile)) {
             $vertical = $this->resize($uploadFile, $uploadDir, $newFile, 320, 240, "min/");
-
             $id = DB::getInstance()->insert(
                 "INSERT INTO `photo` ( path, name, title_ua, title_en, description_ua, description_en, vertical) VALUES (:path, :name, :title_ua, :title_en, :description_ua, :description_en, :vertical)",
                 [
@@ -92,7 +91,7 @@ class PhotoController extends Controller
                     "title_en" => $this->request->getPost("title_en"),
                     "description_ua" => $this->request->getPost("description_ua"),
                     "description_en" => $this->request->getPost("description_en"),
-                    "vertical" => $vertical
+                    "vertical" => $vertical ? 1 : 0
                 ]);
             if (!$id) {
                 $this->response->setStatus();
