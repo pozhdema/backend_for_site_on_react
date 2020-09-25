@@ -34,38 +34,40 @@ class PhotoController extends Controller
         $offset = "";
         $limit = "";
         $lang = $this->lang;
-        if (!empty($params["category"])){
+        if (!empty($params["category"])) {
             $where = " LEFT JOIN photo_category pc on photo.id = pc.id_photo WHERE pc.id_category = :category";
-            $data["category"]=$params["category"];
+            $data["category"] = $params["category"];
         }
-        if (!empty($params["limit"])){
-            if (is_numeric($params["limit"])){
+        if (!empty($params["limit"])) {
+            if (is_numeric($params["limit"])) {
                 $int = intval($params["limit"]);
-                $limit=" LIMIT {$int} ";
+                $limit = " LIMIT {$int} ";
             }
         }
-        if (!empty($params["offset"])){
-            if (is_numeric($params["offset"])){
+        if (!empty($params["offset"])) {
+            if (is_numeric($params["offset"])) {
                 $int = intval($params["offset"]);
-                $offset=" OFFSET {$int} ";
+                $offset = " OFFSET {$int} ";
             }
         }
         $dataSet = DB::getInstance()->select(
-            "SELECT photo.id, path, name, title_{$lang} as title, description_{$lang} as description, vertical
+            "SELECT photo.id, path, name, title_{$lang} as title, description_{$lang} as description, vertical, ifnull(likes, 0) as likes
                     FROM photo 
+                     LEFT JOIN (SELECT photo_id, count(id) as likes FROM photo_like GROUP BY photo_id) photo_like on photo_like.photo_id = photo.id
                     {$where} ORDER BY photo.id DESC {$limit} {$offset}", $data
         );
         $links = [];
         foreach ($dataSet as $data) {
             $links[] = [
-                "path" => $this->config["domain"] ,
+                "path" => $this->config["domain"],
                 "name" => $data["name"],
                 "id" => $data["id"],
                 "min" => $data["path"] . "min/",
                 "full" => $data["path"],
                 "title" => $data["title"],
                 "description" => $data["description"],
-                "vertical" => $data["vertical"]
+                "vertical" => $data["vertical"],
+                "like" => $data["likes"]
             ];
         }
         $this->response->setStatus("success");
@@ -255,6 +257,40 @@ class PhotoController extends Controller
             $this->response->setStatus("success");
             $this->response->setStatusCode(200);
             $this->response->setMessage("OK");
+        }
+        return $this->response->json();
+    }
+
+    public function setLikeAction()
+    {
+        $request = $this->request->getPost();
+        if (isset($request["id"]) and !empty($request["id"])) {
+            $IP = isset($_SERVER["HTTP_CF_CONNECTING_IP"]) ? $_SERVER["HTTP_CF_CONNECTING_IP"] : $_SERVER['REMOTE_ADDR'];
+            $userAgent = $_SERVER['HTTP_USER_AGENT'];
+            $like = DB::getInstance()->select("SELECT `id` FROM `photo_like` WHERE `photo_id` = :id AND `IP` = :ip",
+                [
+                    "id" => $request["id"],
+                    "ip" => $IP
+                ]);
+            if (!empty($like)) {
+                $this->response->setStatus();
+                $this->response->setStatusCode(422);
+                $this->response->setMessage("You already liked this photo");
+            } else {
+                DB::getInstance()->insert("INSERT INTO `photo_like` ( photo_id, IP, user_agent) VALUES (:photo_id, :IP, :user_agent)",
+                    [
+                        "photo_id" => $this->request->getPost("id"),
+                        "IP" => $IP,
+                        "user_agent" => $userAgent
+                    ]);
+                $this->response->setStatus("success");
+                $this->response->setStatusCode(200);
+                $this->response->setMessage("liked");
+            }
+        } else {
+            $this->response->setStatus();
+            $this->response->setStatusCode(422);
+            $this->response->setMessage("Photo id required");
         }
         return $this->response->json();
     }
