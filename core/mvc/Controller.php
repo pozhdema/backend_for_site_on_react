@@ -60,8 +60,10 @@ class Controller
 
     public function setLang(string $lang)
     {
-        if ($lang=="uk"){
-            $lang="ua";
+        if ($lang == "uk") {
+            $lang = "ua";
+        } elseif ($lang == 'en-US') {
+            $lang = 'en';
         }
         $this->lang = $lang;
     }

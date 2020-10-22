@@ -143,4 +143,15 @@ ALTER TABLE `photo`
 CHANGE COLUMN `description_ua` `description_ua` TEXT NULL ,
 CHANGE COLUMN `description_en` `description_en` TEXT NULL ;
 
+ALTER TABLE `photo`
+ADD COLUMN `vertical` TINYINT NULL AFTER `description_en`;
 
+CREATE TABLE `photo_like` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `photo_id` INT NOT NULL,
+  `IP` VARCHAR(45) NOT NULL,
+  `user_agent` LONGTEXT NOT NULL,
+  PRIMARY KEY (`id`));
+
+INSERT INTO `resources` (`resource`, `permission`) VALUES ('photo', 'setLike');
+INSERT INTO `permissions` (`role_id`, `resource_id`) VALUES ('1', '18');
